@@ -524,13 +524,24 @@ namespace uTikDownloadHelper
 
                     CurrentFile = new FileInfo(filePath);
                     lblCurrentFile.Text = url.Filename;
+
+                    bool resume = false;
+
+                    if (CurrentFile.Length > 0 && CurrentFile.Length < url.Size)
+                    {
+                        resume = true;
+                    } else if (CurrentFile.Length > 0)
+                    {
+                        continue;
+                    }
+
                     for (var i = 0; i < Common.Settings.downloadTries; i++)
                     {
                         int exitCode = await Task.Run(() => {
 
                             var procStIfo = new ProcessStartInfo();
                             procStIfo.FileName = Program.ResourceFiles.wget;
-                            procStIfo.Arguments = HelperFunctions.escapeCommandArgument(url.URL) + " -c -O " + HelperFunctions.escapeCommandArgument(filePath);
+                            procStIfo.Arguments = HelperFunctions.escapeCommandArgument(url.URL) + (resume ? " -c":"") +" -O " + HelperFunctions.escapeCommandArgument(filePath);
                             procStIfo.UseShellExecute = shellExecute;
                             procStIfo.CreateNoWindow = hideWget;
 
