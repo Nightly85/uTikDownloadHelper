@@ -246,7 +246,7 @@ namespace uTikDownloadHelper
         {
             String website = Microsoft.VisualBasic.Interaction.InputBox(Localization.Strings.WhatIsTheAddress + "\n\n" + Localization.Strings.TitleKeyWebsiteName + "\n\n" + Localization.Strings.JustTypeTheHostname, Localization.Strings.AnswerThisQuestion, "", -1, -1).ToLower();
             
-            if (Common.getMD5Hash(website) == "d098abb93c29005dbd07deb43d81c5df") {
+            if (Common.getMD5Hash(website) == "3cbe074f2b138e86d15cd9a5e1082893") {
                 Common.Settings.ticketWebsite = website;
                 ((Button)sender).Dispose();
                 getTitleList();

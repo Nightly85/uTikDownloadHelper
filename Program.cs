@@ -3,6 +3,11 @@ using System.Windows.Forms;
 using System.IO;
 using System.Reflection;
 using System.Linq;
+using Semver;
+using System.Net;
+using Newtonsoft.Json.Linq;
+using System.Text;
+using System.Diagnostics;
 
 namespace uTikDownloadHelper
 {
@@ -10,10 +15,36 @@ namespace uTikDownloadHelper
     {
         public static ExtractedResources ResourceFiles = new ExtractedResources();
         public static MultiFormContext FormContext = new MultiFormContext();
+        
 
         [STAThread]
         static void Main(string[] args)
         {
+
+            try
+            {
+                System.Version version = Assembly.GetExecutingAssembly().GetName().Version;
+                SemVersion currentVersion = new SemVersion(version.Major, version.Minor, version.Build);
+                HttpWebRequest request = WebRequest.Create("https://api.github.com/repos/DanTheMan827/uTikDownloadHelper/releases") as HttpWebRequest;
+                request.UserAgent = "uTikDownloadHelper " + currentVersion;
+                HttpWebResponse response = (HttpWebResponse)request.GetResponse();
+                StreamReader reader = new System.IO.StreamReader(response.GetResponseStream(), ASCIIEncoding.UTF8);
+
+                dynamic json = JArray.Parse(reader.ReadToEnd());
+
+                SemVersion newestVersion = SemVersion.Parse(((String)json[0].tag_name).Substring(1));
+
+                if (newestVersion > currentVersion)
+                {
+                    if (MessageBox.Show(String.Format("v{0} is now available, you have v{1}.\r\n\r\nDo you want to visit the download page?", newestVersion.ToString(), currentVersion.ToString()), "New Version", MessageBoxButtons.YesNo) == DialogResult.Yes)
+                    {
+                        Process.Start((String)json[0].html_url);
+                        return;
+                    }
+                }
+            }
+            catch (Exception ex) { }
+
             Directory.CreateDirectory(Common.TicketsPath);
             if (Common.Settings.ticketWebsite == null) Common.Settings.ticketWebsite = "";
 

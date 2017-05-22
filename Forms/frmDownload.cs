@@ -530,8 +530,9 @@ namespace uTikDownloadHelper
                     if (CurrentFile.Length > 0 && CurrentFile.Length < url.Size)
                     {
                         resume = true;
-                    } else if (CurrentFile.Length > 0)
+                    } else if (CurrentFile.Length > 0 && url.Size > 0)
                     {
+                        completeFileDataDownloaded += CurrentFile.Length;
                         continue;
                     }
 

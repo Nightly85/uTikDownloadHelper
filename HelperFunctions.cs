@@ -83,7 +83,7 @@ namespace uTikDownloadHelper
         }
         public async static Task<byte[]> DownloadTitleKeyWebsiteTicket(string TitleID)
         {
-            string url = "https://" + Common.Settings.ticketWebsite + "/ticket/" + TitleID + ".tik";
+            string url = "http://" + Common.Settings.ticketWebsite + "/ticket/" + TitleID + ".tik";
             byte[] data = await (new WebClient()).DownloadDataTaskAsync(new Uri(url));
             return data;
         }
